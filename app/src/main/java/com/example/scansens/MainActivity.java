@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     TextView zyAngle;
 
     TextView light;
-
+    TextView temp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main);//5.
         //получаем объект менеджера датчиков
         light = (TextView) findViewById(R.id.light);
+        temp = (TextView) findViewById(R.id.temp);
         sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
         rotationMatrix = new float[16];
         accelerometer = new float[3];
@@ -45,13 +46,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
+
     @Override //6.
     protected void onResume()
     {
         super.onResume();
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_UI);
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_UI);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), SensorManager.SENSOR_DELAY_UI);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE), SensorManager.SENSOR_DELAY_UI);
 
     }
 
@@ -79,6 +82,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         if(event.sensor.getType() == Sensor.TYPE_LIGHT){
             light.setText(""+event.values[0]);
+        }
+        if(event.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE){
+            temp.setText(""+event.values[0]);
         }
 
         loadSensorData(event);
